@@ -1,0 +1,22 @@
+{
+  "name": "companion-planting",
+  "version": "0.0.0",
+  "authors": [
+    "Ben <benjamin.c.henderson@gmail.com>"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "vendor/assets/components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "backbone": "~1.2.0",
+    "backbone.marionette": "~2.4.1",
+    "backbone.radio.shim": "https://gist.github.com/7992474cdb1c5672d88b.git",
+    "backbone.radio": "~0.9.0"
+  }
+}
