@@ -131,6 +131,7 @@ PLATFORMS
 DEPENDENCIES
   backbone-on-rails
   coffee-rails (~> 4.0.0)
+  ejs
   jbuilder (~> 2.0)
   jquery-rails
   rails (= 4.1.7)
