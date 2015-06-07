@@ -1,5 +1,5 @@
 CP.Views.AppView = Mn.LayoutView.extend({
-    template: JST['application/app'],
+    template: false,
     regions: {
         main: "#main",
         header: "#header"
