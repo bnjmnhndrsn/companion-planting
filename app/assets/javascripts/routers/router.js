@@ -6,6 +6,8 @@ window.CP.Router = Backbone.Router.extend({
     },
     showGarden: function(){        
         var mainRegion = channel.request('main');
-        
+        var model = new CP.Models.Garden();
+        var view = CP.Views.GardenLayoutView({model: model});
+        mainRegion.show(view);
     }
 });
