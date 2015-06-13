@@ -12,6 +12,6 @@ class GardenController < ApplicationController
     if @garden
       render :show
     else
-      render render json: ["No garden!"], status: 404
+      render json: ["No garden!"], status: 404
   end
 end
