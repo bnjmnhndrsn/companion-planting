@@ -7,6 +7,7 @@ var GardenSquareView = Mn.ItemView.extend({
 });
 
 CP.Views.GardenView = Mn.CompositeView.extend({
-    childView: GardenSquareView
+    template: JST['garden/garden'],
+    childView: GardenSquareView,
     childViewContainer: '#squares'
-})
+});

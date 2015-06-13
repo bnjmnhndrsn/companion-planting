@@ -9,20 +9,19 @@ var channel = Backbone.Radio.channel('global');
 
 window.CP.App = Marionette.Application.extend({
     onStart: function(){
-        new CP.Router();
-        
-        if (Backbone.history){
-            Backbone.history.start();
-        }
-        
         var appView = new CP.Views.AppView({el: this.getOption('$el')})
         
         appView.render();
         
-        channel.comply('get:region', function(region){
+        channel.reply('get:region', function(region){
             return appView.getRegion(region);
         });
         
+        new CP.Router();
+        
+        if (Backbone.history){
+            Backbone.history.start({pushState: true});
+        }
     }
 });
 
