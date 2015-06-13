@@ -12,12 +12,12 @@ var Suggestions = Backbone.Collection.extend({
 var GardenSquare = Backbone.Model.extend({
     getSuggestions: function(){
         this._suggestions = this._suggestions || new Suggestions();
-        return this._gardenSquares;
+        return this._suggestions;
     },
     parse: function(response){
-        var gardenSquares = this.getGardenSquares();
-        gardenSquares.set(response.garden_squares || [], {parse: true});
-        delete response.garden_squares;
+        var suggestions = this.getSuggestions();
+        suggestions.set(response.suggestions || [], {parse: true});
+        delete response.suggestions;
         return response;
     }
 });
@@ -26,7 +26,7 @@ var GardenSquares = Backbone.Collection.extend({
     model: GardenSquare
 });
 
-CP.Models.Garden = Backbone.Model.extend({ 
+CP.Models.Garden = Backbone.Model.extend({
     urlRoot: '/api/gardens',
     getGardenSquares: function(){
         this._gardenSquares = this._gardenSquares || new GardenSquares();
