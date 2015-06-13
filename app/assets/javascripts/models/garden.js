@@ -27,6 +27,7 @@ var GardenSquares = Backbone.Collection.extend({
 });
 
 CP.Models.Garden = Backbone.Model.extend({ 
+    urlRoot: '/api/gardens',
     getGardenSquares: function(){
         this._gardenSquares = this._gardenSquares || new GardenSquares();
         return this._gardenSquares;

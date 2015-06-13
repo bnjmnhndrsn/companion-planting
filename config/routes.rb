@@ -1,7 +1,10 @@
 Rails.application.routes.draw do
   root 'static_pages#index'
   
-  resources :gardens, only: [:create, :show], :defaults => { :format => 'json' }
+  
+  scope "/api" do
+    resources :gardens, only: [:create, :show], :defaults => { :format => 'json' }
+  end
     
   
   # The priority is based upon order of creation: first created -> highest priority.
