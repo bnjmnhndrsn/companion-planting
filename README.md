@@ -11,3 +11,15 @@
 # Stage 2 #
   - Search for alternative selections in menu
    - Autocomplete search based behavior?
+
+
+SCHEMA
+Garden: 
+ User
+ Size
+ Environment Data
+ 
+Garden Square
+ Col
+ Row
+ Garden
