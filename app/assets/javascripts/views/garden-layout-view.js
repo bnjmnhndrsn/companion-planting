@@ -5,10 +5,16 @@ CP.Views.GardenLayoutView = Mn.LayoutView.extend({
         garden: "#garden"
     },
     onBeforeShow: function(){
-        var view = new CP.Views.GardenView({
+        var gardenView = new CP.Views.GardenView({
             model: this.model
         });
         
-        this.showChildView('garden', view);
+        this.showChildView('garden', gardenView);
+        
+        var menuView = new CP.Views.MenuView({
+            model: this.model
+        });
+        
+        this.showChildView('menu', menuView);
     }
 });
