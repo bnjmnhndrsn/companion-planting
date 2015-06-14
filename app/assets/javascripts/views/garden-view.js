@@ -7,6 +7,12 @@ var GardenSquareView = Mn.ItemView.extend({
             top: (CP.Utils.Constants.SQUARE_HEIGHT * this.model.get('row') ) + "px",
             left: (CP.Utils.Constants.SQUARE_WIDTH * this.model.get('column') ) + "px",
         })
+    },
+    events: {
+        'click': 'selectSquare'
+    },
+    selectSquare: function(){
+        this.model.trigger('select', this.model);
     }
 });
 
