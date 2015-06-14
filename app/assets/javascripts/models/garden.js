@@ -37,5 +37,8 @@ CP.Models.Garden = Backbone.Model.extend({
         gardenSquares.set(response.garden_squares || [], {parse: true});
         delete response.garden_squares;
         return response;
+    },
+    getGardenSquare: function(i, j){
+        return this.getGardenSquares.where({column: j, row: i});
     }
 });

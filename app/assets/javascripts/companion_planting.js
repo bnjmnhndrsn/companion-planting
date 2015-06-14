@@ -2,8 +2,9 @@ window.CP = {
     Views: {},
     Models: {},
     Collection: {},
-    Routers: {}
-}
+    Routers: {},
+    Utils: {}
+};
 
 var channel = Backbone.Radio.channel('global');
 

@@ -6,8 +6,7 @@ CP.Views.GardenLayoutView = Mn.LayoutView.extend({
     },
     onBeforeShow: function(){
         var view = new CP.Views.GardenView({
-            model: this.model,
-            collection: this.model.getGardenSquares()
+            model: this.model
         });
         
         this.showChildView('garden', view);
