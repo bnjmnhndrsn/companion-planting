@@ -1,4 +1,5 @@
 CP.Views.GardenLayoutView = Mn.LayoutView.extend({
+    className: "row",
     template: JST['garden/layout'],
     regions: {
         menu: "#menu",
