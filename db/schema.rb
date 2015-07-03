@@ -11,9 +11,9 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150613004133) do
+ActiveRecord::Schema.define(version: 20150614215220) do
 
-  create_table "garden_squares", force: true do |t|
+  create_table "garden_squares", force: :cascade do |t|
     t.integer  "garden_id"
     t.integer  "column"
     t.integer  "row"
@@ -21,10 +21,16 @@ ActiveRecord::Schema.define(version: 20150613004133) do
     t.datetime "updated_at"
   end
 
-  create_table "gardens", force: true do |t|
-    t.string   "title"
+  create_table "gardens", force: :cascade do |t|
+    t.string   "title",      limit: 255
     t.integer  "height"
     t.integer  "width"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "plants", force: :cascade do |t|
+    t.string   "name",       limit: 255
     t.datetime "created_at"
     t.datetime "updated_at"
   end

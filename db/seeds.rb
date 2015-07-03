@@ -5,3 +5,6 @@
 #
 #   cities = City.create([{ name: 'Chicago' }, { name: 'Copenhagen' }])
 #   Mayor.create(name: 'Emanuel', city: cities.first)
+
+plants = File.readlines('./db/plants.txt').map { |str| { name: str.chomp } }
+Plant.create(plants)
