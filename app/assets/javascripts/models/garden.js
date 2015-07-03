@@ -1,9 +1,5 @@
 var Suggestion = Backbone.Model.extend({
-    defaults: {
-        'name': 'Ginger',
-        'suitability': '100',
-        'id': 1
-    }
+
 });
 
 var Suggestions = Backbone.Collection.extend({
@@ -11,6 +7,11 @@ var Suggestions = Backbone.Collection.extend({
 });
 
 var GardenSquare = Backbone.Model.extend({
+    defaults: function(){
+        return {
+            garden_id: this.collection.garden_id
+        };
+    },
     getSuggestions: function(){
         this._suggestions = this._suggestions || new Suggestions();
         return this._suggestions;
@@ -20,7 +21,11 @@ var GardenSquare = Backbone.Model.extend({
         suggestions.set(response.suggestions || [], {parse: true});
         delete response.suggestions;
         return response;
-    }
+    },
+    fetchOrCreate: function(options){
+        return (this.isNew()) ?  this.save({}, options) : this.fetch(options);
+    },
+    urlRoot: '/api/garden_squares'
 });
 
 var GardenSquares = Backbone.Collection.extend({
@@ -30,7 +35,7 @@ var GardenSquares = Backbone.Collection.extend({
 CP.Models.Garden = Backbone.Model.extend({
     urlRoot: '/api/gardens',
     getGardenSquares: function(){
-        this._gardenSquares = this._gardenSquares || new GardenSquares();
+        this._gardenSquares = this._gardenSquares || new GardenSquares({garden_id: this.id});
         return this._gardenSquares;
     },
     parse: function(response){

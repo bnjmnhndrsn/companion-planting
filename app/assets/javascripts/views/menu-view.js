@@ -29,7 +29,11 @@ CP.Views.MenuView = Mn.LayoutView.extend({
         this.listenTo(gardenSquares, 'select', this.updateMenu);
     },
     updateMenu: function(model){
-        this.showChildView('detail', new DetailView({model: model}));
-        this.showChildView('plantSuggestions', new PlantSuggestionsView({model: model}));
+        model.fetchOrCreate({
+            success: _.bind(function(){
+                this.showChildView('detail', new DetailView({model: model}));
+                this.showChildView('plantSuggestions', new PlantSuggestionsView({model: model}));
+            }, this)
+        });
     }
 });

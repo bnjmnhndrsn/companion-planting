@@ -1,13 +1,14 @@
 Rails.application.routes.draw do
   root 'static_pages#index'
-  
+
   get 'gardens/:id' => 'static_pages#index'
-  
+
   scope "/api" do
-    resources :gardens, only: [:create, :show], :defaults => { :format => 'json' }
+    resources :gardens, only: [:create, :show], defaults: { format: 'json' }
+    resources :garden_squares, only: [:show, :create, :update], defaults: { format: 'json' }
   end
-    
-  
+
+
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 
