@@ -19,6 +19,7 @@
 //= require backbone.marionette/lib/backbone.marionette
 //= require backbone.radio/build/backbone.radio
 //= require backbone.radio.shim/radio.shim
+//= require select2/dist/js/select2.full
 //= require companion_planting
 //= require_tree ../templates
 //= require_tree ./models

@@ -19,6 +19,7 @@
     "backbone.radio.shim": "https://gist.github.com/7992474cdb1c5672d88b.git",
     "backbone.radio": "~0.9.0",
     "bootstrap": "~3.3.4",
-    "bootstrap-sass": "~3.3.4"
+    "bootstrap-sass": "~3.3.4",
+    "select2": "~4.0.0"
   }
 }
