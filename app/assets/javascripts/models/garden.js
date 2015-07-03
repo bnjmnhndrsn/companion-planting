@@ -12,7 +12,7 @@ var Suggestions = Backbone.Collection.extend({
 
 var GardenSquare = Backbone.Model.extend({
     getSuggestions: function(){
-        this._suggestions = this._suggestions || new Suggestions([{}]);
+        this._suggestions = this._suggestions || new Suggestions();
         return this._suggestions;
     },
     parse: function(response){
