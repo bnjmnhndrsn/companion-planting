@@ -3,18 +3,18 @@ var DetailView = Mn.ItemView.extend({
 });
 
 var PlantSuggestionView = Mn.ItemView.extend({
-    template: _.template(''),
+    template: JST['garden/menu-plant-suggestion'],
     tagName: 'li'
-})
+});
 
 var PlantSuggestionsView = Mn.CompositeView.extend({
-    template: JST['garden/menu-plant-select'],
+    template: JST['garden/menu-plant-suggestions'],
+    ui: {
+        addSuggestion: '[name="add_suggestion"]'
+    },
     childViewContainer: 'ul',
     initialize: function(){
         this.collection = this.model.getSuggestions();
-    },
-    onShow: function(){
-        this.$('select').select2();
     }
 });
 

@@ -1,6 +1,6 @@
 var Suggestion = Backbone.Model.extend({
     defaults: {
-        'text': 'Ginger',
+        'name': 'Ginger',
         'suitability': '100',
         'id': 1
     }
