@@ -29,13 +29,16 @@ var GardenSquare = Backbone.Model.extend({
 });
 
 var GardenSquares = Backbone.Collection.extend({
+    initialize: function (models, options){
+        this.garden_id = options.garden_id;
+    },
     model: GardenSquare
 });
 
 CP.Models.Garden = Backbone.Model.extend({
     urlRoot: '/api/gardens',
     getGardenSquares: function(){
-        this._gardenSquares = this._gardenSquares || new GardenSquares({garden_id: this.id});
+        this._gardenSquares = this._gardenSquares || new GardenSquares([], {garden_id: this.id});
         return this._gardenSquares;
     },
     parse: function(response){
