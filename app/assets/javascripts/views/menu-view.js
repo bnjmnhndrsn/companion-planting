@@ -3,9 +3,24 @@ var DetailView = Mn.ItemView.extend({
 });
 
 var PlantSuggestionView = Mn.ItemView.extend({
+    events: {
+        'change @ui.checkbox': 'select'
+    },
+    modelEvents: {
+        'deselected': 'deselect'
+    },
+    ui: {
+        'checkbox': 'input[type="checkbox"]'
+    },
     template: JST['garden/menu-plant-suggestion'],
     tagName: 'li',
-    className: 'form-inline'
+    className: 'form-inline',
+    select: function(){
+        this.model.select();
+    },
+    deselect: function(){
+        this.ui.checkbox.prop('checked', false);
+    }
 });
 
 var PlantSuggestionsView = Mn.CompositeView.extend({
@@ -16,7 +31,6 @@ var PlantSuggestionsView = Mn.CompositeView.extend({
     childViewContainer: 'ul',
     childView: PlantSuggestionView,
     initialize: function(){
-        debugger;
         this.collection = this.model.getSuggestions();
     }
 });

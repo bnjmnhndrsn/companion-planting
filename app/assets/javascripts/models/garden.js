@@ -1,8 +1,13 @@
 var Suggestion = Backbone.Model.extend({
-
+    initialize: function(options){
+        Backbone.Select.Me.applyTo( this );
+    }
 });
 
 var Suggestions = Backbone.Collection.extend({
+    initialize: function(models, options){
+        Backbone.Select.One.applyTo( this, models, options );
+    },
     model: Suggestion
 });
 
