@@ -4,7 +4,8 @@ var DetailView = Mn.ItemView.extend({
 
 var PlantSuggestionView = Mn.ItemView.extend({
     template: JST['garden/menu-plant-suggestion'],
-    tagName: 'li'
+    tagName: 'li',
+    className: 'form-inline'
 });
 
 var PlantSuggestionsView = Mn.CompositeView.extend({
@@ -13,7 +14,9 @@ var PlantSuggestionsView = Mn.CompositeView.extend({
         addSuggestion: '[name="add_suggestion"]'
     },
     childViewContainer: 'ul',
+    childView: PlantSuggestionView,
     initialize: function(){
+        debugger;
         this.collection = this.model.getSuggestions();
     }
 });
