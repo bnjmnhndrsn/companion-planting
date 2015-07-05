@@ -15,6 +15,11 @@ var GardenSquareView = Mn.ItemView.extend({
     },
     selectSquare: function(){
         this.model.trigger('select', this.model);
+    },
+    templateHelpers: function(){
+        return {
+            hasPlant: !!this.model.get('plant')
+        };
     }
 });
 

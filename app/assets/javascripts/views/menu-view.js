@@ -36,7 +36,7 @@ var PlantSuggestionsView = Mn.CompositeView.extend({
     },
     selectSuggestion: function(suggestion, collection){
         this.model.save({
-            plant_id: suggestion.id
+            plant: suggestion
         }, {
             success: function () {
                 console.log('garden square saved');

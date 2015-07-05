@@ -28,6 +28,9 @@ class GardenSquaresController < ApplicationController
 
   private
     def garden_square_params
-      params[:garden_square].permit(:column, :row, :garden_id, :plant_id)
+      parameters = params.permit(:id, :column, :row, :garden_id, plant: [:id])
+      parameters[:plant_id] = parameters[:plant][:id] if parameters[:plant]
+      parameters.delete(:plant)
+      parameters
     end
 end

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150614215220) do
+ActiveRecord::Schema.define(version: 20150705152117) do
 
   create_table "garden_squares", force: :cascade do |t|
     t.integer  "garden_id"
@@ -19,7 +19,10 @@ ActiveRecord::Schema.define(version: 20150614215220) do
     t.integer  "row"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "plant_id"
   end
+
+  add_index "garden_squares", ["plant_id"], name: "index_garden_squares_on_plant_id"
 
   create_table "gardens", force: :cascade do |t|
     t.string   "title",      limit: 255

@@ -43,7 +43,9 @@ var GardenSquare = Backbone.Model.extend({
     urlRoot: '/api/garden_squares',
     toJSON: function(){
         var attrs = _.clone(this.attributes);
-        attrs.plant = attrs.plant && attrs.plant.toJSON();
+        if (attrs.plant) {
+            attrs.plant = attrs.plant.toJSON();
+        }
         return attrs;
     },
     _listenToPlant: function(){
