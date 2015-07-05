@@ -32,6 +32,16 @@ var PlantSuggestionsView = Mn.CompositeView.extend({
     childView: PlantSuggestionView,
     initialize: function(){
         this.collection = this.model.getSuggestions();
+        this.listenTo(this.collection, 'select:one', this.selectSuggestion);
+    },
+    selectSuggestion: function(suggestion, collection){
+        this.model.save({
+            plant_id: suggestion.id
+        }, {
+            success: function () {
+                console.log('garden square saved');
+            }
+        });
     }
 });
 

@@ -25,12 +25,18 @@ var GardenSquare = Backbone.Model.extend({
         var suggestions = this.getSuggestions();
         suggestions.set(response.suggestions || [], {parse: true});
         delete response.suggestions;
+
+        var plant =
         return response;
     },
     fetchOrCreate: function(options){
         return (this.isNew()) ?  this.save({}, options) : this.fetch(options);
     },
-    urlRoot: '/api/garden_squares'
+    urlRoot: '/api/garden_squares',
+    toJSON: function(){
+        var attrs = _.clone(this.attributes);
+        attrs.plant =
+    }
 });
 
 var GardenSquares = Backbone.Collection.extend({

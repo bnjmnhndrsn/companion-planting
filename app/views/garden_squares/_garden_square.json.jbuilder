@@ -1,1 +1,1 @@
-json.extract! garden_square, :id, :column, :row
+json.extract! garden_square, :id, :column, :row, :plant

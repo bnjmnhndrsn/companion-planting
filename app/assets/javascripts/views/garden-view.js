@@ -1,8 +1,10 @@
 var GardenSquareView = Mn.ItemView.extend({
-    template: _.template(''),
+    template: JST['garden/garden_square'],
     className: 'square',
+    modelEvents: {
+        'change:plant_id': 'render'
+    },
     onRender: function(){
-        
         this.$el.css({
             top: (CP.Utils.Constants.SQUARE_HEIGHT * this.model.get('row') ) + "px",
             left: (CP.Utils.Constants.SQUARE_WIDTH * this.model.get('column') ) + "px",
@@ -13,6 +15,11 @@ var GardenSquareView = Mn.ItemView.extend({
     },
     selectSquare: function(){
         this.model.trigger('select', this.model);
+    },
+    templateHelpers: function(){
+        return {
+            plantName: this.model.get('plant_id') || ''
+        };
     }
 });
 
@@ -25,16 +32,16 @@ CP.Views.GardenView = Mn.CompositeView.extend({
     template: JST['garden/garden'],
     _populateCollection: function(){
         var collection = this.collection = this.model.getGardenSquares(),
-            width = this.model.get('width'), 
+            width = this.model.get('width'),
             height = this.model.get('height');
             grid = _.times(height, function(){
                 return _.times(width, function(){ });
             });
-            
+
         this.collection.each(function(model){
             grid[model.get('row')][model.get('column')] = true;
         });
-        
+
         _.each(grid, function(row, i){
             _.each(row, function(cell, j){
                 if (!cell) {
