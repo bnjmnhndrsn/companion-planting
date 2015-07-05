@@ -18,9 +18,11 @@ var GardenSquare = Backbone.Model.extend({
         };
     },
     initialize: function () {
-        if (this.has('plant')) {
+        if (this.get('plant')) {
             this._listenToPlant();
         }
+
+        this.listenTo(this, 'sync', this._selectSuggestion);
     },
     getSuggestions: function(){
         this._suggestions = this._suggestions || new Suggestions();
@@ -52,6 +54,22 @@ var GardenSquare = Backbone.Model.extend({
         this.listenTo(this.get('plant'), 'change', function(){
             this.trigger('change:plant');
         });
+    },
+    selectSuggestion: function(){
+        var plant = this.get('plant');
+
+        var suggestions = this.getSuggestions();
+
+        if (!plant) {
+            this.suggestions.deselect({silent: true});
+            return;
+        }
+
+        var model = suggestions.get(plant.id);
+
+        if (model) {
+            model.select({silent: true});
+        }
     }
 });
 

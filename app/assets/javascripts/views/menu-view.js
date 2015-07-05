@@ -20,6 +20,11 @@ var PlantSuggestionView = Mn.ItemView.extend({
     },
     deselect: function(){
         this.ui.checkbox.prop('checked', false);
+    },
+    templateHelpers: function(){
+        return {
+            isSelected: this.model.selected
+        };
     }
 });
 
@@ -58,6 +63,7 @@ CP.Views.MenuView = Mn.LayoutView.extend({
     updateMenu: function(model){
         model.fetchOrCreate({
             success: _.bind(function(){
+                model.selectSuggestion();
                 this.showChildView('detail', new DetailView({model: model}));
                 this.showChildView('plantSuggestions', new PlantSuggestionsView({model: model}));
             }, this)
