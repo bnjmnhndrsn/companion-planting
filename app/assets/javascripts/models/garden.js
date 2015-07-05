@@ -17,6 +17,11 @@ var GardenSquare = Backbone.Model.extend({
             garden_id: this.collection.garden_id
         };
     },
+    initialize: function () {
+        if (this.has('plant')) {
+            this._listenToPlant();
+        }
+    },
     getSuggestions: function(){
         this._suggestions = this._suggestions || new Suggestions();
         return this._suggestions;
@@ -26,7 +31,10 @@ var GardenSquare = Backbone.Model.extend({
         suggestions.set(response.suggestions || [], {parse: true});
         delete response.suggestions;
 
-        var plant =
+        if (response.plant) {
+            response.plant = new Backbone.Model(response.plant);
+        }
+
         return response;
     },
     fetchOrCreate: function(options){
@@ -35,7 +43,13 @@ var GardenSquare = Backbone.Model.extend({
     urlRoot: '/api/garden_squares',
     toJSON: function(){
         var attrs = _.clone(this.attributes);
-        attrs.plant =
+        attrs.plant = attrs.plant && attrs.plant.toJSON();
+        return attrs;
+    },
+    _listenToPlant: function(){
+        this.listenTo(this.get('plant'), 'change', function(){
+            this.trigger('change:plant');
+        });
     }
 });
 

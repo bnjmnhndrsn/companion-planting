@@ -1,5 +1,6 @@
 class GardenSquare < ActiveRecord::Base
   belongs_to :garden
+  belongs_to :plant
   validates :column, presence: true
   validates :row, presence: true
   validates :garden, presence: true

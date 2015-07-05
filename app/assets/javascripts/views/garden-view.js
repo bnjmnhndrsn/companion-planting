@@ -2,7 +2,7 @@ var GardenSquareView = Mn.ItemView.extend({
     template: JST['garden/garden_square'],
     className: 'square',
     modelEvents: {
-        'change:plant_id': 'render'
+        'change:plant': 'render'
     },
     onRender: function(){
         this.$el.css({
@@ -15,11 +15,6 @@ var GardenSquareView = Mn.ItemView.extend({
     },
     selectSquare: function(){
         this.model.trigger('select', this.model);
-    },
-    templateHelpers: function(){
-        return {
-            plantName: this.model.get('plant_id') || ''
-        };
     }
 });
 
