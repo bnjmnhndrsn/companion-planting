@@ -57,8 +57,8 @@ CP.Views.MenuView = Mn.LayoutView.extend({
         plantSuggestions: '[data-region="plantSuggestions"]',
     },
     initialize: function(){
-        var gardenSquares = this.model.getGardenSquares();
-        this.listenTo(gardenSquares, 'select', this.updateMenu);
+        var plantings = this.model.getPlantings();
+        this.listenTo(plantings, 'select', this.updateMenu);
     },
     updateMenu: function(model){
         model.fetchOrCreate({

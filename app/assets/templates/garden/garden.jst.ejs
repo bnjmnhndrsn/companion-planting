@@ -1,1 +1,14 @@
-<div id="squares"></div>
+<div id="grid">
+    <% _.times(height, function(i){ %>
+        <% _.times(width, function(j){ %>
+            <div
+                class="square"
+                data-left="<%= j %>"
+                data-right="<%= j + 1 %>"
+                data-top="<%= i %>"
+                data-bottom="<%= i + 1 %>"
+            ></div>
+        <% }) %>
+    <% }) %>
+    <div class="plantings-container"></div>
+</div>

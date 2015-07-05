@@ -11,7 +11,7 @@ var Suggestions = Backbone.Collection.extend({
     model: Suggestion
 });
 
-var GardenSquare = Backbone.Model.extend({
+var Planting = Backbone.Model.extend({
     defaults: function(){
         return {
             garden_id: this.collection.garden_id
@@ -42,7 +42,7 @@ var GardenSquare = Backbone.Model.extend({
     fetchOrCreate: function(options){
         return (this.isNew()) ?  this.save({}, options) : this.fetch(options);
     },
-    urlRoot: '/api/garden_squares',
+    urlRoot: '/api/plantings',
     toJSON: function(){
         var attrs = _.clone(this.attributes);
         if (attrs.plant) {
@@ -73,26 +73,23 @@ var GardenSquare = Backbone.Model.extend({
     }
 });
 
-var GardenSquares = Backbone.Collection.extend({
+var Plantings = Backbone.Collection.extend({
     initialize: function (models, options){
         this.garden_id = options.garden_id;
     },
-    model: GardenSquare
+    model: Planting
 });
 
 CP.Models.Garden = Backbone.Model.extend({
     urlRoot: '/api/gardens',
-    getGardenSquares: function(){
-        this._gardenSquares = this._gardenSquares || new GardenSquares([], {garden_id: this.id});
-        return this._gardenSquares;
+    getPlantings: function(){
+        this._plantings = this._plantings || new Plantings([], {garden_id: this.id});
+        return this._plantings;
     },
     parse: function(response){
-        var gardenSquares = this.getGardenSquares();
-        gardenSquares.set(response.garden_squares || [], {parse: true});
-        delete response.garden_squares;
+        var plantings = this.getPlantings();
+        plantings.set(response.plantings || [], {parse: true});
+        delete response.plantings;
         return response;
-    },
-    getGardenSquare: function(i, j){
-        return this.getGardenSquares.where({column: j, row: i});
     }
 });

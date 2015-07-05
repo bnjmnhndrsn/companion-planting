@@ -1,13 +1,12 @@
-var GardenSquareView = Mn.ItemView.extend({
-    template: JST['garden/garden_square'],
-    className: 'square',
+var PlantingView = Mn.ItemView.extend({
+    template: JST['garden/planting'],
     modelEvents: {
         'change:plant': 'render'
     },
     onRender: function(){
         this.$el.css({
-            top: (CP.Utils.Constants.SQUARE_HEIGHT * this.model.get('row') ) + "px",
-            left: (CP.Utils.Constants.SQUARE_WIDTH * this.model.get('column') ) + "px",
+            top: (CP.Utils.Constants.SQUARE_HEIGHT * this.model.get('top') ) + "px",
+            left: (CP.Utils.Constants.SQUARE_WIDTH * this.model.get('left') ) + "px",
         })
     },
     events: {
@@ -24,36 +23,13 @@ var GardenSquareView = Mn.ItemView.extend({
 });
 
 CP.Views.GardenView = Mn.CompositeView.extend({
-    initialize: function(){
-        this._populateCollection();
-    },
-    childView: GardenSquareView,
-    childViewContainer: '#squares',
+    childView: PlantingView,
+    childViewContainer: '#grid',
     template: JST['garden/garden'],
-    _populateCollection: function(){
-        var collection = this.collection = this.model.getGardenSquares(),
-            width = this.model.get('width'),
-            height = this.model.get('height');
-            grid = _.times(height, function(){
-                return _.times(width, function(){ });
-            });
-
-        this.collection.each(function(model){
-            grid[model.get('row')][model.get('column')] = true;
-        });
-
-        _.each(grid, function(row, i){
-            _.each(row, function(cell, j){
-                if (!cell) {
-                    collection.add({row: i, column: j});
-                }
-            });
-        });
-    },
     onRender: function(){
-        this.$('#squares').css({
-            height: (CP.Utils.Constants.SQUARE_HEIGHT * this.model.get('height') ) + "px",
-            width: (CP.Utils.Constants.SQUARE_WIDTH * this.model.get('width') ) + "px"
+        this.$('#grid').css({
+            height: (CP.Utils.Constants.SQUARE_HEIGHT * this.model.get('height') + 1) + "px",
+            width: (CP.Utils.Constants.SQUARE_WIDTH * this.model.get('width') + 1) + "px"
         });
     }
 });
