@@ -1,3 +1,10 @@
+<div class="row">
+    <h2>Your Gardens</h2>
+</div>
 <% _.each(items, function(item){ %>
-    <li><a href="gardens/<%= item.id %>"><%= item.name || item.id %></a></li>
+    <div class="row">
+        <div class="col-md-2">
+            <a href="gardens/<%= item.id %>"><%= item.title || item.id %></a>
+        </div>
+    </div>
 <% }) %>
