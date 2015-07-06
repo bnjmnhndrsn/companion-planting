@@ -1,4 +1,5 @@
 var PlantingView = Mn.ItemView.extend({
+    className: 'planting',
     template: JST['garden/planting'],
     modelEvents: {
         'change:plant': 'render'
@@ -24,8 +25,23 @@ var PlantingView = Mn.ItemView.extend({
 
 CP.Views.GardenView = Mn.CompositeView.extend({
     childView: PlantingView,
-    childViewContainer: '#grid',
+    childViewContainer: '.plantings-container',
+    events: {
+        'click .square': 'addPlanting'
+    },
+    initialize: function(){
+        this.collection = this.model.getPlantings();
+    },
     template: JST['garden/garden'],
+    addPlanting: function (e) {
+        var $square = $(e.currentTarget);
+        this.collection.add({
+            top: +$square.data('top'),
+            left: +$square.data('left'),
+            right: +$square.data('right'),
+            bottom: +$square.data('bottom')
+        });
+    },
     onRender: function(){
         this.$('#grid').css({
             height: (CP.Utils.Constants.SQUARE_HEIGHT * this.model.get('height') + 1) + "px",
