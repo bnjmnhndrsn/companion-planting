@@ -35,11 +35,17 @@ CP.Views.GardenView = Mn.CompositeView.extend({
     template: JST['garden/garden'],
     addPlanting: function (e) {
         var $square = $(e.currentTarget);
-        this.collection.add({
+        var planting = this.collection.add({
             top: +$square.data('top'),
             left: +$square.data('left'),
             right: +$square.data('right'),
             bottom: +$square.data('bottom')
+        });
+
+        planting.save({}, {
+            success: function () {
+                planting.trigger('select', planting);
+            }
         });
     },
     onRender: function(){
