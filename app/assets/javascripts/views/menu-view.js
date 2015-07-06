@@ -61,7 +61,6 @@ CP.Views.MenuView = Mn.LayoutView.extend({
         this.listenTo(plantings, 'select', this.updateMenu);
     },
     updateMenu: function(model){
-        model.selectSuggestion();
         this.showChildView('detail', new DetailView({model: model}));
         this.showChildView('plantSuggestions', new PlantSuggestionsView({model: model}));
     }

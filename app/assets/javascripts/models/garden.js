@@ -18,11 +18,12 @@ var Planting = Backbone.Model.extend({
         };
     },
     initialize: function () {
-        if (this.get('plant')) {
-            this._listenToPlant();
-        }
+        var plant = this.get('plant');
 
-        this.listenTo(this, 'sync', this._selectSuggestion);
+        if (plant) {
+            this._listenToPlant();
+            this.getSuggestions().add( plant ).select();
+        }
     },
     getSuggestions: function(){
         this._suggestions = this._suggestions || new Suggestions();
@@ -34,7 +35,7 @@ var Planting = Backbone.Model.extend({
         delete response.suggestions;
 
         if (response.plant) {
-            response.plant = new Backbone.Model(response.plant);
+            response.plant = new Suggestion(response.plant);
         }
 
         return response;
@@ -54,22 +55,6 @@ var Planting = Backbone.Model.extend({
         this.listenTo(this.get('plant'), 'change', function(){
             this.trigger('change:plant');
         });
-    },
-    selectSuggestion: function(){
-        var plant = this.get('plant');
-
-        var suggestions = this.getSuggestions();
-
-        if (!plant) {
-            suggestions.deselect({silent: true});
-            return;
-        }
-
-        var model = suggestions.get(plant.id);
-
-        if (model) {
-            model.select({silent: true});
-        }
     }
 });
 
