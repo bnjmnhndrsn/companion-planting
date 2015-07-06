@@ -61,7 +61,7 @@ var Planting = Backbone.Model.extend({
         var suggestions = this.getSuggestions();
 
         if (!plant) {
-            this.suggestions.deselect({silent: true});
+            suggestions.deselect({silent: true});
             return;
         }
 
