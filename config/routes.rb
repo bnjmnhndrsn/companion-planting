@@ -1,10 +1,11 @@
 Rails.application.routes.draw do
   root 'static_pages#index'
 
+  get 'gardens' => 'static_pages#index'
   get 'gardens/:id' => 'static_pages#index'
 
   scope "/api" do
-    resources :gardens, only: [:create, :show], defaults: { format: 'json' }
+    resources :gardens, only: [:create, :show, :index], defaults: { format: 'json' }
     resources :plantings, only: [:show, :create, :update], defaults: { format: 'json' }
   end
 

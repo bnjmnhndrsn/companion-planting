@@ -15,4 +15,8 @@ class GardensController < ApplicationController
       render json: ["No garden!"], status: 404
     end
   end
+
+  def index
+    @gardens = Garden.all
+  end
 end

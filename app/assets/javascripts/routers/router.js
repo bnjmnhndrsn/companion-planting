@@ -2,10 +2,24 @@ var channel = Backbone.Radio.channel('global');
 
 window.CP.Router = Backbone.Router.extend({
     routes: {
-        '': 'index',
-        'gardens/:id': 'showGarden'
+        'gardens': 'gardenIndex',
+        'gardens/new': 'gardenCreate',
+        'gardens/:id': 'gardenShow'
     },
-    showGarden: function(id){        
+    gardenIndex: function(){
+        var mainRegion = channel.request('get:region', 'main');
+        var collection = new CP.Collections.Gardens();
+        collection.fetch({
+            success: function(){
+                var view = new CP.Views.GardenIndexView({collection: collection});
+                mainRegion.show(view);
+            }
+        })
+    },
+    gardenCreate: function(){
+        var mainRegion = channel.request('get:region', 'main');
+    },
+    gardenShow: function(id){
         var mainRegion = channel.request('get:region', 'main');
         var model = new CP.Models.Garden({id: id});
         model.fetch({
