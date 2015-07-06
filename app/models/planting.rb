@@ -1,8 +1,10 @@
 class Planting < ActiveRecord::Base
   belongs_to :garden
   belongs_to :plant
-  validates :column, presence: true
-  validates :row, presence: true
+  validates :top, presence: true
+  validates :bottom, presence: true
+  validates :left, presence: true
+  validates :right, presence: true
   validates :garden, presence: true
   # validate :garden_square_must_not_exist, :garden_square_in_garden, on: :create
 
