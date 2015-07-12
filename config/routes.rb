@@ -2,6 +2,7 @@ Rails.application.routes.draw do
   root 'static_pages#index'
 
   get 'gardens' => 'static_pages#index'
+  get 'gardens/new' => 'static_pages#index'
   get 'gardens/:id' => 'static_pages#index'
 
   scope "/api" do
