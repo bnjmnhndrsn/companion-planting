@@ -52,6 +52,9 @@ var PlantSuggestionsView = Mn.CompositeView.extend({
 
 CP.Views.MenuView = Mn.LayoutView.extend({
     template: JST['garden/menu'],
+    ui: {
+        'emptyText': '[data-ui="emptyText"]'
+    },
     regions: {
         detail: '[data-region="detail"]',
         plantSuggestions: '[data-region="plantSuggestions"]',
@@ -61,6 +64,7 @@ CP.Views.MenuView = Mn.LayoutView.extend({
         this.listenTo(plantings, 'select', this.updateMenu);
     },
     updateMenu: function(model){
+        this.ui.emptyText.hide();
         this.showChildView('detail', new DetailView({model: model}));
         this.showChildView('plantSuggestions', new PlantSuggestionsView({model: model}));
     }
