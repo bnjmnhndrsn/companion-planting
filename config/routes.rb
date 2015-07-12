@@ -8,6 +8,7 @@ Rails.application.routes.draw do
   scope "/api" do
     resources :gardens, only: [:create, :show, :index], defaults: { format: 'json' }
     resources :plantings, only: [:show, :create, :update], defaults: { format: 'json' }
+    resources :plants, only: [:index], defaults: { format: 'json' }
   end
 
 

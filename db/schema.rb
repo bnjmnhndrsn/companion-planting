@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150705173629) do
+ActiveRecord::Schema.define(version: 20150712222204) do
 
   create_table "gardens", force: :cascade do |t|
     t.string   "title",      limit: 255
@@ -26,10 +26,9 @@ ActiveRecord::Schema.define(version: 20150705173629) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "plant_id"
-    t.decimal  "top"
-    t.decimal  "left"
-    t.decimal  "right"
-    t.decimal  "bottom"
+    t.decimal  "i"
+    t.decimal  "j"
+    t.decimal  "radius"
   end
 
   add_index "plantings", ["plant_id"], name: "index_plantings_on_plant_id"
