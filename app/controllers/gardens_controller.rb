@@ -3,7 +3,7 @@ class GardensController < ApplicationController
   HEIGHT = 10
 
   def create
-    @garden = Garden.create(width: WIDTH, height: HEIGHT, title: "A Garden")
+    @garden = Garden.create(width: WIDTH, height: HEIGHT, title: garden_params[:title])
     render :show
   end
 
@@ -19,4 +19,10 @@ class GardensController < ApplicationController
   def index
     @gardens = Garden.all
   end
+
+  private
+    def garden_params
+      params.permit(:id, :height, :width, :title)
+    end
+
 end

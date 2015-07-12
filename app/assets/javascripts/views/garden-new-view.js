@@ -2,16 +2,16 @@ CP.Views.GardenNewView = Marionette.ItemView.extend({
     template: JST['garden/new'],
     ui: {
         'submit': '[type="submit"]',
-        'name': '[name="name"]'
+        'title': '[name="title"]'
     },
     events: {
         'click @ui.submit': 'createGarden',
-        'input @ui.name': 'enableSubmit'
+        'input @ui.title': 'enableSubmit'
     },
     createGarden: function(){
-        var name = this.ui.name.val();
+        var title = this.ui.title.val();
         this.model.save({
-            name: name
+            title: title
         },{
             success: function(response, model){
                 var id = model.id
@@ -20,7 +20,7 @@ CP.Views.GardenNewView = Marionette.ItemView.extend({
         });
     },
     enableSubmit: function(){
-        var val = this.ui.name.val();
+        var val = this.ui.title.val();
 
         if (val && val.length) {
             this.ui.submit.removeClass('disabled');
