@@ -1,10 +1,11 @@
 class GardensController < ApplicationController
-  WIDTH = 10
-  HEIGHT = 10
-
   def create
-    @garden = Garden.create(width: WIDTH, height: HEIGHT, title: garden_params[:title])
-    render :show
+    @garden = Garden.new(garden_params)
+    if @garden.save
+      render :show
+    else
+      render json: @garden.errors.full_messages, status: :unprocessable_entity
+    end
   end
 
   def show

@@ -1,2 +1,2 @@
-json.extract! planting, :id, :top, :left, :right, :bottom, :plant
+json.extract! planting, :id, :i, :j, :radius, :plant
 json.suggestions planting.get_suggestions
