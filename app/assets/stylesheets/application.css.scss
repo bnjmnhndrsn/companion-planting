@@ -27,6 +27,7 @@
 }
 
 .square {
+    cursor: pointer;
     border-width: 1px 0px 0px 1px;
     display: inline-block;
     border-style: dotted;
@@ -38,12 +39,21 @@
     height: 50px;
     background-color: lightgreen;
     z-index: 1;
+
+    &:hover {
+        background-color: green;
+    }
 }
 
 .planting {
+    cursor: pointer;
     position: absolute;
     z-index: 10;
     width: 50px;
     height: 50px;
     background-color: lightblue;
+
+    &:hover {
+        background-color: blue;
+    }
 }
