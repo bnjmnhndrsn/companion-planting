@@ -20,10 +20,11 @@
 @import "bootstrap";
 
 #grid {
-    position: relative;
-    border-style: dotted;
-    border-color: black;
-    border-width: 0px 1px 1px 0px;
+    background-color: lightgreen;
+    .axis path, .axis line{
+        fill: none;
+        stroke: black;
+    }
 }
 
 .square {

@@ -21,6 +21,7 @@
 //= require backbone.radio.shim/radio.shim
 //= require backbone.select/dist/backbone.select
 //= require select2/dist/js/select2.full
+//= require d3/d3.js
 //= require companion_planting
 //= require_tree ../templates
 //= require_tree ./models
