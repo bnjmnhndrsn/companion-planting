@@ -48,40 +48,50 @@ CP.Views.GardenView = Mn.ItemView.extend({
             }
         });
     },
-    onShow: function(){
+    createScale: function(){
         this.width = this.$el.width();
-        this.height = this.$el.height();
 
-
-
-        var scale = this.scale = d3.scale.linear()
-        .domain([0, this.model.get('width')])
-        .range([0, this.width]);
-
-        var xAxis = d3.svg.axis().ticks(10)
-            .scale(scale)
-            .orient("bottom")
-            .innerTickSize(-scale(this.height))
-            .outerTickSize(0);
-
-        var yAxis = d3.svg.axis().ticks(10)
-            .scale(scale)
-            .orient("left")
-            .innerTickSize(-this.width)
-            .outerTickSize(0);
-
+        this.scale = d3.scale.linear()
+            .domain([0, this.model.get('width')])
+            .range([0, this.width]);
+    },
+    createSvg: function(){
         this.svg = d3.select('#grid').attr({
             height: this.scale(this.model.get('width')),
             width: this.scale(this.model.get('height'))
         });
+    },
+    getDimensions: function(){
+    },
+    createGridLines: function(){
+        var view = this;
+        var xCoords = d3.range(0, this.model.get('width') + 6, 6);
+        var yCoords = d3.range(0, this.model.get('height') + 6, 6);
 
-        this.svg.append("g")
-            .attr("class", "x axis")
-            .attr("transform", "translate(0," + scale(this.height) + ")")
-            .call(xAxis);
+        this.svg.append('g')
+            .selectAll('line')
+            .data(xCoords)
+            .enter()
+            .append('line')
+            .attr('x1', function(d){ return view.scale(d) })
+            .attr('x2', function(d){ return view.scale(d) })
+            .attr('y1', function(d){ return 0 })
+            .attr('y2', function(d){ return view.scale(view.model.get('height')) });
 
-        this.svg.append("g")
-            .attr("class", "y axis")
-            .call(yAxis);
+        this.svg.append('g')
+            .selectAll('line')
+            .data(yCoords)
+            .enter()
+            .append('line')
+            .attr('y1', function(d){ return view.scale(d) })
+            .attr('y2', function(d){ return view.scale(d) })
+            .attr('x1', function(d){ return 0 })
+            .attr('x2', function(d){ return view.scale(view.model.get('width')) });
+    },
+    onShow: function(){
+        this.getDimensions();
+        this.createScale();
+        this.createSvg();
+        this.createGridLines();
     }
 });
