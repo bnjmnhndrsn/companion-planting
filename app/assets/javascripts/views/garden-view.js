@@ -88,10 +88,36 @@ CP.Views.GardenView = Mn.ItemView.extend({
             .attr('x1', function(d){ return 0 })
             .attr('x2', function(d){ return view.scale(view.model.get('width')) });
     },
+    createGridNodes: function(){
+        var view = this;
+        var width = this.model.get('width'), height = this.model.get('height');
+        var coords = [];
+        
+        for (var y = 6; y < height; y += 6) {
+            for (var x = 6; x < width; x += 6) {
+                coords.push({cx: x, cy: y});
+            }
+        }
+
+
+        this.svg.append('g')
+            .selectAll('circle')
+            .data(coords)
+            .enter()
+            .append('circle')
+            .attr('r', 5)
+            .attr('cx', function(d){
+                return view.scale(d.cx);
+            })
+            .attr('cy', function(d){
+                return view.scale(d.cy);
+            });
+    },
     onShow: function(){
         this.getDimensions();
         this.createScale();
         this.createSvg();
         this.createGridLines();
+        this.createGridNodes();
     }
 });
