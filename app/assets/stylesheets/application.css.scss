@@ -19,15 +19,21 @@
 @import "bootstrap-sprockets";
 @import "bootstrap";
 
+$planting-color: darken($brand-success, 20%);
+
 #grid {
-    background-color: lightgreen;
+    background-color: $gray-lighter;
 
     line {
-        fill: none;
-        stroke: gray;
+        fill: $gray;
+        stroke: $gray;
     }
 
-    circle {
-        fill: black;
+    circle.planting {
+        fill: lighten($gray, 20%);
+        cursor: pointer;
+        stroke: $gray;
+        stroke-width: 1;
+
     }
 }

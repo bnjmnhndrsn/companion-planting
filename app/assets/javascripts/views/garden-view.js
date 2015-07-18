@@ -23,6 +23,46 @@
 //     }
 // });
 
+var CircleView = Backbone.View.extend({
+    initialize: function(options){
+        this.scale = options.scale;
+        this.d3 = d3.select(this.el);
+        var view = this;
+
+        this.d3
+        .attr('r', this.makeNodeRadiusCallback())
+        .attr('cx', function(d){
+            return view.scale(d.get('j'));
+        })
+        .attr('cy', function(d){
+            return view.scale(d.get('i'));
+        })
+        .on('mouseenter', this.makeNodeAnimationCallback(4 / 3))
+        .on('mouseleave', this.makeNodeAnimationCallback(1))
+        .on('click', function(d){
+            d.trigger('select', d);
+        });
+
+    },
+    nodeRadius: .5,
+    makeNodeRadiusCallback: function(scalar){
+        var view = this;
+        scalar = scalar || 1;
+
+        return function(d){
+            var radius = d.get('radius') || view.nodeRadius;
+            return view.scale(radius * scalar);
+        };
+    },
+    makeNodeAnimationCallback: function(scalar){
+        var radiusCallback = this.makeNodeRadiusCallback(scalar);
+
+        return function(d){
+            d3.select(this).transition().attr('r', radiusCallback);
+        }
+    },
+});
+
 CP.Views.GardenView = Mn.ItemView.extend({
     // childView: PlantingView,
     childViewContainer: '.plantings-container',
@@ -89,6 +129,7 @@ CP.Views.GardenView = Mn.ItemView.extend({
         var view = this;
         var width = this.model.get('width'), height = this.model.get('height');
         var data = [];
+        var childViews = [];
 
         for (var i = this.gridInterval; i < height; i += this.gridInterval) {
             for (var j = this.gridInterval; j < width; j += this.gridInterval) {
@@ -102,19 +143,18 @@ CP.Views.GardenView = Mn.ItemView.extend({
             .data(data)
             .enter()
             .append('circle')
-            .attr('r', function(d){
-                var radius = d.get('radius') || view.nodeRadius;
-                return view.scale(radius);
-            })
-            .attr('cx', function(d){
-                return view.scale(d.get('j'));
-            })
-            .attr('cy', function(d){
-                return view.scale(d.get('i'));
+            .attr('class', 'planting')
+            .each(function(d){
+                childViews.push(
+                    new CircleView({
+                        el: this,
+                        model: d,
+                        scale: view.scale
+                    })
+                );
             });
     },
     gridInterval: 6,
-    nodeRadius: .5,
     onShow: function(){
         this.createScale();
         this.createSvg();
