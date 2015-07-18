@@ -29,23 +29,22 @@ CP.Views.GardenView = Mn.ItemView.extend({
     events: {
         'click .square': 'addPlanting'
     },
+    template: JST['garden/garden'],
     initialize: function(){
         this.collection = this.model.getPlantings();
+        this.createPlantingsMatrix();
     },
-    template: JST['garden/garden'],
-    addPlanting: function (e) {
-        var $square = $(e.currentTarget);
-        var planting = this.collection.add({
-            top: +$square.data('top'),
-            left: +$square.data('left'),
-            right: +$square.data('right'),
-            bottom: +$square.data('bottom')
-        });
+    createPlantingsMatrix: function(){
+        var view = this;
+        this.plantingsMatrix = [];
+        var height = this.model.get('height');
 
-        planting.save({}, {
-            success: function () {
-                planting.trigger('select', planting);
-            }
+        for (var i = this.gridInterval; i < height; i += this.gridInterval) {
+            this.plantingsMatrix[i] = [];
+        }
+
+        this.collection.each(function(planting){
+            view.plantingsMatrix[planting.get('i')][planting.get('j')] = planting;
         });
     },
     createScale: function(){
@@ -61,12 +60,10 @@ CP.Views.GardenView = Mn.ItemView.extend({
             width: this.scale(this.model.get('height'))
         });
     },
-    getDimensions: function(){
-    },
     createGridLines: function(){
         var view = this;
-        var xCoords = d3.range(0, this.model.get('width') + 6, 6);
-        var yCoords = d3.range(0, this.model.get('height') + 6, 6);
+        var xCoords = d3.range(0, this.model.get('width') + this.gridInterval, this.gridInterval);
+        var yCoords = d3.range(0, this.model.get('height') + this.gridInterval, this.gridInterval);
 
         this.svg.append('g')
             .selectAll('line')
@@ -91,30 +88,34 @@ CP.Views.GardenView = Mn.ItemView.extend({
     createGridNodes: function(){
         var view = this;
         var width = this.model.get('width'), height = this.model.get('height');
-        var coords = [];
-        
-        for (var y = 6; y < height; y += 6) {
-            for (var x = 6; x < width; x += 6) {
-                coords.push({cx: x, cy: y});
+        var data = [];
+
+        for (var i = this.gridInterval; i < height; i += this.gridInterval) {
+            for (var j = this.gridInterval; j < width; j += this.gridInterval) {
+                var model = this.plantingsMatrix[i][j] || this.collection.add({i: i, j: j});
+                data.push(model);
             }
         }
 
-
         this.svg.append('g')
             .selectAll('circle')
-            .data(coords)
+            .data(data)
             .enter()
             .append('circle')
-            .attr('r', 5)
+            .attr('r', function(d){
+                var radius = d.get('radius') || view.nodeRadius;
+                return view.scale(radius);
+            })
             .attr('cx', function(d){
-                return view.scale(d.cx);
+                return view.scale(d.get('j'));
             })
             .attr('cy', function(d){
-                return view.scale(d.cy);
+                return view.scale(d.get('i'));
             });
     },
+    gridInterval: 6,
+    nodeRadius: .5,
     onShow: function(){
-        this.getDimensions();
         this.createScale();
         this.createSvg();
         this.createGridLines();

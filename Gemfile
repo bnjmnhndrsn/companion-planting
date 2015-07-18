@@ -42,3 +42,4 @@ gem 'ejs'
 
 gem 'bootstrap-sass', '~> 3.3.4'
 
+gem 'annotate', '~> 2.6.6'

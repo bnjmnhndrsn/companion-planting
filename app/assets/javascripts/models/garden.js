@@ -76,5 +76,8 @@ CP.Models.Garden = Backbone.Model.extend({
         plantings.set(response.plantings || [], {parse: true});
         delete response.plantings;
         return response;
+    },
+    getPlanting: function(i, j) {
+        return this.getPlantings().findWhere({i: i, j: j});
     }
 });
