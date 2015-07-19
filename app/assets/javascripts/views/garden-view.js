@@ -1,66 +1,53 @@
-// var PlantingView = Mn.ItemView.extend({
-//     className: 'planting',
-//     template: JST['garden/planting'],
-//     modelEvents: {
-//         'change:plant': 'render'
-//     },
-//     onRender: function(){
-//         this.$el.css({
-//             top: (CP.Utils.Constants.SQUARE_HEIGHT * this.model.get('top') ) + "px",
-//             left: (CP.Utils.Constants.SQUARE_WIDTH * this.model.get('left') ) + "px",
-//         })
-//     },
-//     events: {
-//         'click': 'selectSquare'
-//     },
-//     selectSquare: function(){
-//         this.model.trigger('select', this.model);
-//     },
-//     templateHelpers: function(){
-//         return {
-//             hasPlant: !!this.model.get('plant')
-//         };
-//     }
-// });
-
-var CircleView = Backbone.View.extend({
+var CircleView = CP.Utils.D3View.extend({
+    events: {
+        'mouseenter': 'onMouseEnter',
+        'mouseleave': 'onMouseLeave',
+        'click': 'onClick'
+    },
+    modelEvents: {
+        'change': 'onModelChange'
+    },
+    nodeRadius: .5,
+    selected: false,
     initialize: function(options){
-        this.scale = options.scale;
-        this.d3 = d3.select(this.el);
-        var view = this;
+        var view  = this;
 
         this.d3
-        .attr('r', this.makeNodeRadiusCallback())
         .attr('cx', function(d){
             return view.scale(d.get('j'));
         })
         .attr('cy', function(d){
             return view.scale(d.get('i'));
-        })
-        .on('mouseenter', this.makeNodeAnimationCallback(4 / 3))
-        .on('mouseleave', this.makeNodeAnimationCallback(1))
-        .on('click', function(d){
-            d.trigger('select', d);
         });
 
+        this.setRadius(1);
     },
-    nodeRadius: .5,
-    makeNodeRadiusCallback: function(scalar){
-        var view = this;
-        scalar = scalar || 1;
-
-        return function(d){
-            var radius = d.get('radius') || view.nodeRadius;
-            return view.scale(radius * scalar);
-        };
+    onModelChange: function(model){
+        console.log('change change change');
     },
-    makeNodeAnimationCallback: function(scalar){
-        var radiusCallback = this.makeNodeRadiusCallback(scalar);
-
-        return function(d){
-            d3.select(this).transition().attr('r', radiusCallback);
+    onMouseEnter: function(node, d, i){
+        if (this.selected || this.model.get('plant')) {
+            return;
         }
+
+        this.setRadius(4 / 3);
     },
+    onMouseLeave: function(node, d, i){
+        if (this.selected) {
+            return;
+        }
+
+        this.setRadius(1);
+    },
+    onClick: function(node, d, i){
+        this.selected = true;
+        d.trigger('select', d);
+    },
+    setRadius: function(scalar){
+        var radius = this.model.get('radius') || this.nodeRadius;
+        radius = this.scale(radius * scalar);
+        this.d3.transition().attr('r', radius);
+    }
 });
 
 CP.Views.GardenView = Mn.ItemView.extend({
