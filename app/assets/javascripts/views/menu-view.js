@@ -28,10 +28,10 @@ var PlantSuggestionView = Mn.ItemView.extend({
     }
 });
 
-var PlantSuggestionsView = Mn.CompositeView.extend({
-    template: JST['garden/menu-plant-suggestions'],
+var PlantingsView = Mn.CompositeView.extend({
+    template: JST['garden/menu-plantings'],
     ui: {
-        addSuggestion: '[name="add_suggestion"]'
+        plant: '[name="plant"]'
     },
     childViewContainer: 'ul',
     childView: PlantSuggestionView,
@@ -47,6 +47,14 @@ var PlantSuggestionsView = Mn.CompositeView.extend({
                 console.log('garden square saved');
             }
         });
+    },
+    templateHelpers: function(){
+        return {
+            hasSuggestions: this.collection.length > 0
+        };
+    },
+    onRender: function(){
+        this.ui.plant.select2();
     }
 });
 
@@ -56,8 +64,7 @@ CP.Views.MenuView = Mn.LayoutView.extend({
         'emptyText': '[data-ui="emptyText"]'
     },
     regions: {
-        detail: '[data-region="detail"]',
-        plantSuggestions: '[data-region="plantSuggestions"]',
+        plantings: '[data-region="plantings"]'
     },
     initialize: function(){
         var plantings = this.model.getPlantings();
@@ -65,7 +72,6 @@ CP.Views.MenuView = Mn.LayoutView.extend({
     },
     updateMenu: function(model){
         this.ui.emptyText.hide();
-        this.showChildView('detail', new DetailView({model: model}));
-        this.showChildView('plantSuggestions', new PlantSuggestionsView({model: model}));
+        this.showChildView('plantings', new PlantingsView({model: model}));
     }
 });

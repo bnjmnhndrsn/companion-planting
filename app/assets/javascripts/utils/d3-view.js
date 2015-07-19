@@ -26,7 +26,7 @@ CP.Utils.D3View = Mn.Object.extend({
     bindModelEvents: function(){
         var events = this.getOption('modelEvents');
         if (!events) return;
-        .each(events, funtion(val, key){
+        _.each(events, function(val, key){
             var method = val;
             if (!_.isFunction(method)) method = this.getOption(val);
             if (!method) return;
