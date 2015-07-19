@@ -25,11 +25,11 @@ window.CP.Router = Backbone.Router.extend({
     gardenShow: function(id){
         var mainRegion = channel.request('get:region', 'main');
         var model = new CP.Models.Garden({id: id});
-        model.fetch({
-            success: function(){
-                var view = new CP.Views.GardenLayoutView({model: model});
-                mainRegion.show(view);
-            }
+        var modelPromise = model.fetch();
+        var plants = CP.Collections.plants = new CP.Collections.Plants();
+        $.when(model.fetch(), plants.fetch()).done(function(){
+            var view = new CP.Views.GardenLayoutView({model: model});
+            mainRegion.show(view);
         });
     }
 });
