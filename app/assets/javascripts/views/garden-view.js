@@ -5,7 +5,7 @@ var CircleView = CP.Utils.D3View.extend({
         'click': 'onClick'
     },
     modelEvents: {
-        'change': 'onModelChange'
+        'change:radius': 'onModelChange'
     },
     nodeRadius: .5,
     selected: false,
@@ -23,7 +23,7 @@ var CircleView = CP.Utils.D3View.extend({
         this.setRadius(1);
     },
     onModelChange: function(model){
-        console.log('change change change');
+        this.setRadius(1);
     },
     onMouseEnter: function(node, d, i){
         if (this.selected || this.model.get('plant')) {

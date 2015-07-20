@@ -63,9 +63,10 @@ var PlantingsView = Mn.CompositeView.extend({
         var view = this;
         var plant = CP.Collections.plants.get(this.ui.plant.val());
         var promise = this.model.save({
-            plant: plant
+            plant: plant,
+            radius: plant.get('radius')
         });
-        debugger;
+
         promise.done(function(){
             view.model.trigger('edit:end', view.model);
         })
