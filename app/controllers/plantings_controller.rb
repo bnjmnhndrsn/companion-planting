@@ -28,7 +28,7 @@ class PlantingsController < ApplicationController
 
   private
     def plantings_params
-      parameters = params.permit(:id, :top, :bottom, :left, :right, :garden_id, plant: [:id])
+      parameters = params.permit(:id, :i, :j, :radius, :garden_id, plant: [:id])
       parameters[:plant_id] = parameters[:plant][:id] if parameters[:plant]
       parameters.delete(:plant)
       parameters

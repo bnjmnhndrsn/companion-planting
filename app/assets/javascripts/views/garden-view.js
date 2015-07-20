@@ -71,7 +71,7 @@ CP.Views.GardenView = Mn.ItemView.extend({
         }
 
         this.collection.each(function(planting){
-            view.plantingsMatrix[planting.get('i')][planting.get('j')] = planting;
+            view.plantingsMatrix[+planting.get('i')][+planting.get('j')] = planting;
         });
     },
     createScale: function(){
@@ -120,7 +120,7 @@ CP.Views.GardenView = Mn.ItemView.extend({
 
         for (var i = this.gridInterval; i < height; i += this.gridInterval) {
             for (var j = this.gridInterval; j < width; j += this.gridInterval) {
-                var model = this.plantingsMatrix[i][j] || this.collection.add({i: i, j: j});
+                var model = this.plantingsMatrix[+i][+j] || this.collection.add({i: i, j: j});
                 data.push(model);
             }
         }
