@@ -1,12 +1,12 @@
-var CircleView = CP.Utils.D3View.extend({
+var NodeView = CP.Utils.D3View.extend({
     events: {
         'mouseenter': 'onMouseEnter',
         'mouseleave': 'onMouseLeave',
         'click': 'onClick'
     },
-    modelEvents: {
-        'change:radius': 'onModelChange'
-    },
+    // modelEvents: {
+    //     'change:radius': 'onModelChange'
+    // },
     nodeRadius: .5,
     selected: false,
     initialize: function(options){
@@ -22,22 +22,22 @@ var CircleView = CP.Utils.D3View.extend({
 
         this.setRadius(1);
     },
-    onModelChange: function(model){
-        this.setRadius(1);
-    },
+    // onModelChange: function(model){
+    //     this.setRadius(1);
+    // },
     onMouseEnter: function(node, d, i){
-        if (this.selected || this.model.get('plant')) {
+        if (this.selected) {
             return;
         }
 
-        this.setRadius(4 / 3);
+        this.d3.transition().style('fill', 'black');
     },
     onMouseLeave: function(node, d, i){
         if (this.selected) {
             return;
         }
 
-        this.setRadius(1);
+        this.d3.transition().style('fill', '#888888');
     },
     onClick: function(node, d, i){
         this.selected = true;
@@ -48,6 +48,9 @@ var CircleView = CP.Utils.D3View.extend({
         radius = this.scale(radius * scalar);
         this.d3.transition().attr('r', radius);
     }
+});
+
+var CursorView = CP.Utils.D3View.extend({
 });
 
 CP.Views.GardenView = Mn.ItemView.extend({
@@ -133,7 +136,7 @@ CP.Views.GardenView = Mn.ItemView.extend({
             .attr('class', 'planting')
             .each(function(d){
                 childViews.push(
-                    new CircleView({
+                    new NodeView({
                         el: this,
                         model: d,
                         scale: view.scale
