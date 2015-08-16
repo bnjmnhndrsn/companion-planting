@@ -29,7 +29,7 @@ $planting-color: darken($brand-success, 20%);
         stroke: $gray;
     }
 
-    circle.planting {
+    circle.node {
         fill: lighten($gray, 20%);
         cursor: pointer;
         stroke: $gray;

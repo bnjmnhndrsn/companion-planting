@@ -44,9 +44,21 @@ var NodeView = CP.Utils.D3View.extend({
         d.trigger('select', d);
     },
     setRadius: function(scalar){
-        var radius = this.model.get('radius') || this.nodeRadius;
+        var radius = this.nodeRadius;
         radius = this.scale(radius * scalar);
         this.d3.transition().attr('r', radius);
+    }
+});
+
+var PlantingView = CP.Utils.D3View.extend({
+    nodeRadius: .5,
+    initialize: function(options){
+        var view  = this;
+
+        this.d3
+        .attr('cx', this.scale(this.model.get('j')))
+        .attr('cy', this.scale(this.model.get('j')))
+        .attr('r', this.scale(this.model.get('radius')));
     }
 });
 
@@ -143,7 +155,6 @@ CP.Views.GardenView = Mn.ItemView.extend({
         var view = this;
         var width = this.model.get('width'), height = this.model.get('height');
         var data = [];
-        var childViews = [];
 
         for (var i = this.gridInterval; i < height; i += this.gridInterval) {
             for (var j = this.gridInterval; j < width; j += this.gridInterval) {
@@ -153,19 +164,36 @@ CP.Views.GardenView = Mn.ItemView.extend({
         }
 
         this.svg.append('g')
-            .selectAll('circle')
+            .selectAll('.node')
             .data(data)
+            .enter()
+            .append('circle')
+            .attr('class', 'node')
+            .each(function(d){
+                new NodeView({
+                    el: this,
+                    model: d,
+                    scale: view.scale
+                })
+            });
+    },
+    createPlantings: function(){
+        var view = this;
+
+        this.svg.append('g')
+            .selectAll('.planting')
+            .data(this.collection.filter(function(model){
+                return model.has('plant');
+            }))
             .enter()
             .append('circle')
             .attr('class', 'planting')
             .each(function(d){
-                childViews.push(
-                    new NodeView({
-                        el: this,
-                        model: d,
-                        scale: view.scale
-                    })
-                );
+                new PlantingView({
+                    el: this,
+                    model: d,
+                    scale: view.scale
+                });
             });
     },
     gridInterval: 6,
@@ -174,5 +202,6 @@ CP.Views.GardenView = Mn.ItemView.extend({
         this.createSvg();
         this.createGridLines();
         this.createGridNodes();
+        this.createPlantings();
     }
 });
