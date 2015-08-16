@@ -4,9 +4,6 @@ var NodeView = CP.Utils.D3View.extend({
         'mouseleave': 'onMouseLeave',
         'click': 'onClick'
     },
-    // modelEvents: {
-    //     'change:radius': 'onModelChange'
-    // },
     nodeRadius: .5,
     selected: false,
     initialize: function(options){
@@ -22,9 +19,6 @@ var NodeView = CP.Utils.D3View.extend({
 
         this.setRadius(1);
     },
-    // onModelChange: function(model){
-    //     this.setRadius(1);
-    // },
     onMouseEnter: function(node, d, i){
         if (this.selected) {
             return;
@@ -63,7 +57,6 @@ var PlantingView = CP.Utils.D3View.extend({
 });
 
 CP.Views.GardenView = Mn.ItemView.extend({
-    // childView: PlantingView,
     childViewContainer: '.plantings-container',
     events: {
         'click .square': 'addPlanting'
@@ -76,12 +69,16 @@ CP.Views.GardenView = Mn.ItemView.extend({
     bindShadow: function(d, i){
         var view = this;
 
-            this.svg
-            .append('circle')
-            .attr('class', 'shadow')
-            .attr('r', this.scale(6))
-            .attr('cx', d3.event.offsetX)
-            .attr('cy', d3.event.offsetY);
+        if (!this.model.get('selected')) {
+            return;
+        }
+
+        this.svg
+        .append('circle')
+        .attr('class', 'shadow')
+        .attr('r', this.scale(6))
+        .attr('cx', d3.event.offsetX)
+        .attr('cy', d3.event.offsetY);
 
         this.svg.on('mousemove', function(){
             view.svg.selectAll('.shadow')

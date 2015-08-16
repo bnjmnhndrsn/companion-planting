@@ -9,10 +9,6 @@ var DetailView = Mn.ItemView.extend({
     startEditing: function(e){
         e.preventDefault();
         this.model.trigger('edit:start', this.model);
-    },
-    templateHelpers: function(){
-        debugger;
-        return {};
     }
 });
 
@@ -42,7 +38,7 @@ var PlantSuggestionView = Mn.ItemView.extend({
     }
 });
 
-var PlantingsView = Mn.CompositeView.extend({
+var EditorView = Mn.CompositeView.extend({
     events: {
         'change @ui.plant': 'selectPlant'
     },
@@ -52,9 +48,6 @@ var PlantingsView = Mn.CompositeView.extend({
     },
     childViewContainer: 'ul',
     childView: PlantSuggestionView,
-    selectPlant: function(){
-        this.model.trigger('edit:end');
-    },
     initialize: function(){
         this.collection = this.model.getSuggestions();
         this.listenTo(this.collection, 'select:one', this.selectSuggestion);
@@ -68,7 +61,7 @@ var PlantingsView = Mn.CompositeView.extend({
         });
 
         promise.done(function(){
-            view.model.trigger('edit:end', view.model);
+            view.model.trigger('unselect', view.model);
         })
 
     },
@@ -92,32 +85,46 @@ var PlantingsView = Mn.CompositeView.extend({
     }
 });
 
+var OptionsView = Mn.LayoutView.extend({
+    template: JST['garden/menu-options'],
+    ui: {
+        plant: '[name="plant"]'
+    },
+    onRender: function(){
+        this.ui.plant.select2();
+    },
+    events: {
+        'change @ui.plant': 'selectPlant'
+    },
+    selectPlant: function(){
+        var plant = CP.Collections.plants.get(this.ui.plant.val());
+        this.model.set('selected', plant);
+    },
+    templateHelpers: function(){
+        return {
+            plants: CP.Collections.plants.toJSON()
+        };
+    },
+});
+
 CP.Views.MenuView = Mn.LayoutView.extend({
     template: JST['garden/menu'],
-    ui: {
-        'emptyText': '[data-ui="emptyText"]'
-    },
     regions: {
         plantings: '[data-region="plantings"]'
     },
     initialize: function(){
         var plantings = this.model.getPlantings();
-        this.listenTo(plantings, 'select', function(model){
-            if (model.get('plant')){
-                this.showDetail(model);
-            } else {
-                this.showEditor(model);
-            }
-        });
-        this.listenTo(plantings, 'edit:start', this.showEditor);
-        this.listenTo(plantings, 'edit:end', this.showDetail);
+        this.listenTo(plantings, 'select', this.showEditor);
+        this.listenTo(plantings, 'unselect', this.showOptions);
+    },
+    showOptions: function(){
+        this.showChildView('plantings', new OptionsView({model: this.model}));
     },
     showEditor: function(model){
-        this.ui.emptyText.hide();
-        this.showChildView('plantings', new PlantingsView({model: model}));
+        this.showChildView('plantings', new EditorView({model: model}));
     },
-    showDetail: function(model){
-        this.ui.emptyText.hide();
-        this.showChildView('plantings', new DetailView({model: model}));
+    onShow: function(){
+        this.showOptions();
     }
+
 });
