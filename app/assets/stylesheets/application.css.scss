@@ -34,6 +34,12 @@ $planting-color: darken($brand-success, 20%);
         cursor: pointer;
         stroke: $gray;
         stroke-width: 1;
+    }
 
+    circle.shadow {
+        fill: $gray;
+        stroke-width: 1;
+        opacity: .25;
+        stroke: black;
     }
 }

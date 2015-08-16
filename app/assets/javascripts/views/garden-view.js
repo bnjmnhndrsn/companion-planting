@@ -50,9 +50,6 @@ var NodeView = CP.Utils.D3View.extend({
     }
 });
 
-var CursorView = CP.Utils.D3View.extend({
-});
-
 CP.Views.GardenView = Mn.ItemView.extend({
     // childView: PlantingView,
     childViewContainer: '.plantings-container',
@@ -63,6 +60,27 @@ CP.Views.GardenView = Mn.ItemView.extend({
     initialize: function(){
         this.collection = this.model.getPlantings();
         this.createPlantingsMatrix();
+    },
+    bindShadow: function(d, i){
+        var view = this;
+
+            this.svg
+            .append('circle')
+            .attr('class', 'shadow')
+            .attr('r', this.scale(6))
+            .attr('cx', d3.event.offsetX)
+            .attr('cy', d3.event.offsetY);
+
+        this.svg.on('mousemove', function(){
+            view.svg.selectAll('.shadow')
+                .attr('cx', d3.event.offsetX)
+                .attr('cy', d3.event.offsetY);
+        });
+    },
+    unbindShadow: function(d, i){
+        this.svg.on('mousemove');
+        this.svg.selectAll('.shadow').remove();
+
     },
     createPlantingsMatrix: function(){
         var view = this;
@@ -85,9 +103,15 @@ CP.Views.GardenView = Mn.ItemView.extend({
             .range([0, this.width]);
     },
     createSvg: function(){
+        var view = this;
+
         this.svg = d3.select('#grid').attr({
             height: this.scale(this.model.get('width')),
             width: this.scale(this.model.get('height'))
+        }).on('mouseenter', function(d, i){
+            view.bindShadow();
+        }).on('mouseleave', function(d, i){
+            view.unbindShadow();
         });
     },
     createGridLines: function(){
