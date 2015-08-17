@@ -4,6 +4,9 @@ var NodeView = CP.Utils.D3View.extend({
         'mouseleave': 'onMouseLeave',
         'click': 'onClick'
     },
+    modelEvents: {
+        'highlight': 'onHighlight'
+    },
     nodeRadius: .5,
     selected: false,
     initialize: function(options){
@@ -18,6 +21,9 @@ var NodeView = CP.Utils.D3View.extend({
         });
 
         this.setRadius(1);
+    },
+    onHighlight: function(){
+        this.d3.style('fill', 'black');
     },
     onMouseEnter: function(node, d, i){
         if (this.selected) {
@@ -81,14 +87,33 @@ CP.Views.GardenView = Mn.ItemView.extend({
         .attr('cy', d3.event.offsetY);
 
         this.svg.on('mousemove', function(){
+            var x = d3.event.offsetX, y = d3.event.offsetY;
+
             view.svg.selectAll('.shadow')
-                .attr('cx', d3.event.offsetX)
-                .attr('cy', d3.event.offsetY);
+                .attr('cx', x)
+                .attr('cy', y);
+
+            var closestNode = view.closestNode(view.scale.invert(y), view.scale.invert(x));
+            if (closestNode) {
+                closestNode.trigger('highlight');
+            }
         });
     },
     unbindShadow: function(d, i){
         this.svg.on('mousemove');
         this.svg.selectAll('.shadow').remove();
+
+    },
+    closestNode: function(i, j) {
+        var interval = this.gridInterval;
+        var iRemainder = i % interval, jRemainder = j % interval;
+        var closestI = i - iRemainder, closestJ = j - jRemainder;
+        if (iRemainder > interval / 2) closestI += interval;
+        if (jRemainder > interval / 2) closestJ += interval;
+
+        if (closestI > 0 && closestJ > 0) {
+            return this.plantingsMatrix[closestI][closestJ];
+        }
 
     },
     createPlantingsMatrix: function(){
@@ -156,6 +181,7 @@ CP.Views.GardenView = Mn.ItemView.extend({
         for (var i = this.gridInterval; i < height; i += this.gridInterval) {
             for (var j = this.gridInterval; j < width; j += this.gridInterval) {
                 var model = this.plantingsMatrix[+i][+j] || this.collection.add({i: i, j: j});
+                this.plantingsMatrix[+i][+j] = model;
                 data.push(model);
             }
         }
