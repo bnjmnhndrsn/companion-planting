@@ -5,7 +5,8 @@ var NodeView = CP.Utils.D3View.extend({
         'click': 'onClick'
     },
     modelEvents: {
-        'highlight': 'onHighlight'
+        'highlight': 'onHighlight',
+        'unhighlight': 'onUnhighlight'
     },
     nodeRadius: .5,
     selected: false,
@@ -25,19 +26,20 @@ var NodeView = CP.Utils.D3View.extend({
     onHighlight: function(){
         this.d3.style('fill', 'black');
     },
+    onUnhighlight: function(){
+        this.d3.transition().style('fill', '#888888');
+    },
     onMouseEnter: function(node, d, i){
         if (this.selected) {
             return;
         }
-
-        this.d3.transition().style('fill', 'black');
+        this.onHighlight();
     },
     onMouseLeave: function(node, d, i){
         if (this.selected) {
             return;
         }
-
-        this.d3.transition().style('fill', '#888888');
+        this.onUnhighlight();
     },
     onClick: function(node, d, i){
         this.selected = true;
@@ -87,16 +89,7 @@ CP.Views.GardenView = Mn.ItemView.extend({
         .attr('cy', d3.event.offsetY);
 
         this.svg.on('mousemove', function(){
-            var x = d3.event.offsetX, y = d3.event.offsetY;
-
-            view.svg.selectAll('.shadow')
-                .attr('cx', x)
-                .attr('cy', y);
-
-            var closestNode = view.closestNode(view.scale.invert(y), view.scale.invert(x));
-            if (closestNode) {
-                closestNode.trigger('highlight');
-            }
+            view.onDragOver();
         });
     },
     unbindShadow: function(d, i){
@@ -104,7 +97,7 @@ CP.Views.GardenView = Mn.ItemView.extend({
         this.svg.selectAll('.shadow').remove();
 
     },
-    closestNode: function(i, j) {
+    getClosestNode: function(i, j) {
         var interval = this.gridInterval;
         var iRemainder = i % interval, jRemainder = j % interval;
         var closestI = i - iRemainder, closestJ = j - jRemainder;
@@ -226,5 +219,26 @@ CP.Views.GardenView = Mn.ItemView.extend({
         this.createGridLines();
         this.createGridNodes();
         this.createPlantings();
+    },
+    onDragOver: function(){
+        var x = d3.event.offsetX, y = d3.event.offsetY;
+
+        this.svg.selectAll('.shadow')
+            .attr('cx', x)
+            .attr('cy', y);
+
+        var closestNode = this.getClosestNode(this.scale.invert(y), this.scale.invert(x));
+
+        if (closestNode && this._closestNode !== closestNode) {
+            if (this._closestNode) {
+                this._closestNode.trigger('unhighlight');
+            }
+
+            this._closestNode = closestNode;
+            this._closestNode.trigger('highlight');
+        } else if (!closestNode && this._closestNode) {
+            this._closestNode.trigger('unhighlight');
+            this._closestNode = undefined;
+        }
     }
 });
