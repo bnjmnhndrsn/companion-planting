@@ -78,7 +78,7 @@ var Plantings = Backbone.Collection.extend({
         return (this._matrix[i] || {})[j];
     },
     onAdd: function(model){
-        var i = +planting.get('i'), j = +planting.get('j');
+        var i = +model.get('i'), j = +model.get('j');
         this._matrix[i] = (this._matrix[i] || []);
         this._matrix[i][j] = model;
     },

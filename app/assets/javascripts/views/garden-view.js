@@ -64,19 +64,22 @@ var PlantingView = CP.Utils.D3View.extend({
     }
 });
 
-CP.Utils.D3View.extend({
-
-});
-
-CP.Views.GardenView = Mn.ItemView.extend({
-    childViewContainer: '.plantings-container',
+var SVGView = CP.Utils.D3View.extend({
     events: {
-        'click .square': 'addPlanting'
+        'mouseenter': 'bindShadow',
+        'mouseleave': 'unbindShadow'
     },
-    template: JST['garden/garden'],
-    initialize: function(){
-        this.collection = this.model.getPlantings();
-        this.createPlantingsMatrix();
+    initialize: function(options){
+        this.d3.attr({
+            height: this.scale(this.model.get('width')),
+            width: this.scale(this.model.get('height'))
+        });
+
+        this.gridInterval = this.model.get('gridInterval');
+
+        this.createGridLines();
+        this.createGridNodes();
+        this.createPlantings();
     },
     bindShadow: function(d, i){
         var view = this;
@@ -85,59 +88,27 @@ CP.Views.GardenView = Mn.ItemView.extend({
             return;
         }
 
-        this.svg
+        this.d3
         .append('circle')
         .attr('class', 'shadow')
         .attr('r', this.scale(6))
         .attr('cx', d3.event.offsetX)
         .attr('cy', d3.event.offsetY);
 
-        this.svg.on('mousemove', function(){
+        this.d3.on('mousemove', function(){
             view.onDragOver();
         });
     },
     unbindShadow: function(d, i){
-        this.svg.on('mousemove');
-        this.svg.selectAll('.shadow').remove();
-
-    },
-    getClosestNode: function(i, j) {
-        var interval = this.gridInterval;
-        var iRemainder = i % interval, jRemainder = j % interval;
-        var closestI = i - iRemainder, closestJ = j - jRemainder;
-        if (iRemainder > interval / 2) closestI += interval;
-        if (jRemainder > interval / 2) closestJ += interval;
-
-        if (closestI > 0 && closestJ > 0) {
-            return this.plantingsMatrix[closestI][closestJ];
-        }
-
-    },
-    createScale: function(){
-        this.width = this.$el.width();
-
-        this.scale = d3.scale.linear()
-            .domain([0, this.model.get('width')])
-            .range([0, this.width]);
-    },
-    createSvg: function(){
-        var view = this;
-
-        this.svg = d3.select('#grid').attr({
-            height: this.scale(this.model.get('width')),
-            width: this.scale(this.model.get('height'))
-        }).on('mouseenter', function(d, i){
-            view.bindShadow();
-        }).on('mouseleave', function(d, i){
-            view.unbindShadow();
-        });
+        this.d3.on('mousemove');
+        this.d3.selectAll('.shadow').remove();
     },
     createGridLines: function(){
         var view = this;
         var xCoords = d3.range(0, this.model.get('width') + this.gridInterval, this.gridInterval);
         var yCoords = d3.range(0, this.model.get('height') + this.gridInterval, this.gridInterval);
 
-        this.svg.append('g')
+        this.d3.append('g')
             .selectAll('line')
             .data(xCoords)
             .enter()
@@ -147,7 +118,7 @@ CP.Views.GardenView = Mn.ItemView.extend({
             .attr('y1', function(d){ return 0 })
             .attr('y2', function(d){ return view.scale(view.model.get('height')) });
 
-        this.svg.append('g')
+        this.d3.append('g')
             .selectAll('line')
             .data(yCoords)
             .enter()
@@ -164,13 +135,12 @@ CP.Views.GardenView = Mn.ItemView.extend({
 
         for (var i = this.gridInterval; i < height; i += this.gridInterval) {
             for (var j = this.gridInterval; j < width; j += this.gridInterval) {
-                var model = this.plantingsMatrix[+i][+j] || this.collection.add({i: i, j: j});
-                this.plantingsMatrix[+i][+j] = model;
+                var model = this.model.getPlanting(i, j) || this.model.getPlantings().add({i: i, j: j});
                 data.push(model);
             }
         }
 
-        this.svg.append('g')
+        this.d3.append('g')
             .selectAll('.node')
             .data(data)
             .enter()
@@ -187,9 +157,9 @@ CP.Views.GardenView = Mn.ItemView.extend({
     createPlantings: function(){
         var view = this;
 
-        this.svg.append('g')
+        this.d3.append('g')
             .selectAll('.planting')
-            .data(this.collection.filter(function(model){
+            .data(this.model.getPlantings().filter(function(model){
                 return model.has('plant');
             }))
             .enter()
@@ -203,18 +173,21 @@ CP.Views.GardenView = Mn.ItemView.extend({
                 });
             });
     },
-    gridInterval: 6,
-    onShow: function(){
-        this.createScale();
-        this.createSvg();
-        this.createGridLines();
-        this.createGridNodes();
-        this.createPlantings();
+    getClosestNode: function(i, j) {
+        var interval = this.gridInterval;
+        var iRemainder = i % interval, jRemainder = j % interval;
+        var closestI = i - iRemainder, closestJ = j - jRemainder;
+        if (iRemainder > interval / 2) closestI += interval;
+        if (jRemainder > interval / 2) closestJ += interval;
+
+        if (closestI > 0 && closestJ > 0) {
+            return this.model.getPlanting(closestI, closestJ);
+        }
     },
     onDragOver: function(){
         var x = d3.event.offsetX, y = d3.event.offsetY;
 
-        this.svg.selectAll('.shadow')
+        this.d3.selectAll('.shadow')
             .attr('cx', x)
             .attr('cy', y);
 
@@ -231,5 +204,36 @@ CP.Views.GardenView = Mn.ItemView.extend({
             this._closestNode.trigger('unhighlight');
             this._closestNode = undefined;
         }
+    }
+});
+
+CP.Views.GardenView = Mn.ItemView.extend({
+    childViewContainer: '.plantings-container',
+    template: JST['garden/garden'],
+    initialize: function(){
+        this.collection = this.model.getPlantings();
+    },
+    createScale: function(){
+        this.width = this.$el.width();
+
+        this.scale = d3.scale.linear()
+            .domain([0, this.model.get('width')])
+            .range([0, this.width]);
+    },
+    createSvg: function(){
+        var view = this;
+
+        var svg = document.getElementById('grid');
+
+        this.svgView = new SVGView({
+            el: svg,
+            model: this.model,
+            scale: this.scale
+        });
+
+    },
+    onShow: function(){
+        this.createScale();
+        this.createSvg();
     }
 });
