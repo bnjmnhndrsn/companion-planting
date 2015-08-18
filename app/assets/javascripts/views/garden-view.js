@@ -64,6 +64,10 @@ var PlantingView = CP.Utils.D3View.extend({
     }
 });
 
+CP.Utils.D3View.extend({
+
+});
+
 CP.Views.GardenView = Mn.ItemView.extend({
     childViewContainer: '.plantings-container',
     events: {
@@ -108,19 +112,6 @@ CP.Views.GardenView = Mn.ItemView.extend({
             return this.plantingsMatrix[closestI][closestJ];
         }
 
-    },
-    createPlantingsMatrix: function(){
-        var view = this;
-        this.plantingsMatrix = [];
-        var height = this.model.get('height');
-
-        for (var i = this.gridInterval; i < height; i += this.gridInterval) {
-            this.plantingsMatrix[i] = [];
-        }
-
-        this.collection.each(function(planting){
-            view.plantingsMatrix[+planting.get('i')][+planting.get('j')] = planting;
-        });
     },
     createScale: function(){
         this.width = this.$el.width();

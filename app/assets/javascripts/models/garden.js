@@ -61,11 +61,34 @@ var Planting = Backbone.Model.extend({
 var Plantings = Backbone.Collection.extend({
     initialize: function (models, options){
         this.garden_id = options.garden_id;
+        this._matrix = [];
+        this.on('add', this.onAdd);
+    },
+    _createMatrix: function(){
+
+        this.each(function(planting){
+
+        }, this);
+    },
+    get: function(i, j){
+        if (arguments.length < 2) {
+            return Backbone.Collection.prototype.get.call(this, i);
+        }
+
+        return (this._matrix[i] || {})[j];
+    },
+    onAdd: function(model){
+        var i = +planting.get('i'), j = +planting.get('j');
+        this._matrix[i] = (this._matrix[i] || []);
+        this._matrix[i][j] = model;
     },
     model: Planting
 });
 
 CP.Models.Garden = Backbone.Model.extend({
+    defaults: {
+        gridInterval: 6
+    },
     urlRoot: '/api/gardens',
     getPlantings: function(){
         this._plantings = this._plantings || new Plantings([], {garden_id: this.id});
@@ -78,6 +101,6 @@ CP.Models.Garden = Backbone.Model.extend({
         return response;
     },
     getPlanting: function(i, j) {
-        return this.getPlantings().findWhere({i: i, j: j});
+        return this.getPlantings().get(i, j);
     }
 });
