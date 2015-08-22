@@ -1,16 +1,3 @@
-var Suggestion = Backbone.Model.extend({
-    initialize: function(options){
-        Backbone.Select.Me.applyTo( this );
-    }
-});
-
-var Suggestions = Backbone.Collection.extend({
-    initialize: function(models, options){
-        Backbone.Select.One.applyTo( this, models, options );
-    },
-    model: Suggestion
-});
-
 var Planting = Backbone.Model.extend({
     defaults: function(){
         return {
@@ -22,26 +9,14 @@ var Planting = Backbone.Model.extend({
 
         if (plant) {
             this._listenToPlant();
-            this.getSuggestions().add( plant ).select();
         }
     },
-    getSuggestions: function(){
-        this._suggestions = this._suggestions || new Suggestions();
-        return this._suggestions;
-    },
     parse: function(response){
-        var suggestions = this.getSuggestions();
-        suggestions.set(response.suggestions || [], {parse: true});
-        delete response.suggestions;
-
         if (response.plant) {
             response.plant = new Suggestion(response.plant);
         }
 
         return response;
-    },
-    fetchOrCreate: function(options){
-        return (this.isNew()) ?  this.save({}, options) : this.fetch(options);
     },
     urlRoot: '/api/plantings',
     toJSON: function(){
@@ -65,7 +40,6 @@ var Plantings = Backbone.Collection.extend({
         this.on('add', this.onAdd);
     },
     _createMatrix: function(){
-
         this.each(function(planting){
 
         }, this);
