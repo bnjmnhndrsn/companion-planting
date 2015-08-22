@@ -84,8 +84,8 @@ var SVGView = CP.Utils.D3View.extend({
     },
     bindShadow: function(d, i){
         var view = this;
-
-        if (!this.model.get('selected')) {
+        var selected = this.model.get('selected');
+        if (!selected instanceof CP.Models.Plant) {
             return;
         }
 

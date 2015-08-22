@@ -1,2 +1,6 @@
-<h1><%= title %></h1>
-<div data-region="plantings"></div>
+<h1>A garden!</h1>
+<select data-ui='plants'>
+    <% _.each(plants, function(plant){ %>
+        <option val="<%= plant.id %>"><%= plant.name %></option>
+    <% }) %>
+</select>
