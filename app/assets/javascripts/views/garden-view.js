@@ -54,6 +54,9 @@ var NodeView = CP.Utils.D3View.extend({
 
 var PlantingView = CP.Utils.D3View.extend({
     nodeRadius: .5,
+    events: {
+        'click': 'onClick'
+    },
     initialize: function(options){
         var view  = this;
 
@@ -61,6 +64,10 @@ var PlantingView = CP.Utils.D3View.extend({
         .attr('cx', this.scale(this.model.get('j')))
         .attr('cy', this.scale(this.model.get('i')))
         .attr('r', this.scale(this.model.get('plant').get('radius')));
+    },
+    onClick: function(){
+        d3.event.stopPropagation();
+        this.model.select();
     }
 });
 
@@ -84,8 +91,9 @@ var SVGView = CP.Utils.D3View.extend({
     },
     bindShadow: function(d, i){
         var view = this;
-        var selected = this.model.getPlantings().selected;
-        if (!selected) return;
+        var selectedPlanting = this.model.getPlantings().selected;
+        var selectedPlant = CP.Collections.plants.selected;
+        if (selectedPlanting || !selectedPlant) return;
 
         this.d3
         .append('circle')
@@ -204,24 +212,19 @@ var SVGView = CP.Utils.D3View.extend({
             this._closestNode = undefined;
         }
     },
-    onClick: function(){
+    onClick: function(el){
         var node = this._closestNode;
+
         if (!node) return;
-
-        var currentPlant = node.get('plant');
-
-        if (currentPlant) {
-            this.model.getPlantings().select();
-            return;
-        }
 
         var selectedPlant = this.model.getPlantings().selected;
 
-        if (selected) {
+        if (selectedPlant) {
             var promise = node.save({'plant': selected});
             promise.done(this.createPlantings.bind(this));
+        } else {
+            this.model.getPlantings().select(node);
         }
-
     }
 });
 
