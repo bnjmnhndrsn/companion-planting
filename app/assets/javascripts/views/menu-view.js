@@ -10,6 +10,7 @@ CP.Views.MenuView = Mn.ItemView.extend({
         this.plantings = this.model.getPlantings();
         this.listenTo(this.plantings, 'select:one', this.onPlantingSelect);
         this.listenTo(this.plantings, 'deselect:one', this.onPlantingDeselect);
+        this.listenTo(CP.Collections.plants, 'deselect:one', this.onPlantDeselect);
     },
     templateHelpers: function(){
         return {
@@ -28,7 +29,10 @@ CP.Views.MenuView = Mn.ItemView.extend({
         }
     },
     onPlantingDeselect: function(planting){
-        this.ui.plants.val(null);
+        this.ui.plants.val(null).change();
+    },
+    onPlantDeselect: function(){
+        this.ui.plants.val(null).change();
     },
     changePlant: function(){
         var val = this.ui.plants.val();
@@ -36,7 +40,7 @@ CP.Views.MenuView = Mn.ItemView.extend({
         if (this.plantings.selected) {
             this.plantings.selected.save({'plant': plant});
         } else {
-            plant.select();
+            if (plant) plant.select();
         }
     }
 });

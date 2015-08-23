@@ -212,7 +212,9 @@ var SVGView = CP.Utils.D3View.extend({
             this._closestNode = undefined;
         }
     },
-    onClick: function(el){
+    onClick: function(){
+        d3.event.stopPropagation();
+
         var node = this._closestNode;
 
         if (!node) return;
