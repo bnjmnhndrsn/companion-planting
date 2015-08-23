@@ -20,7 +20,12 @@ CP.Views.MenuView = Mn.ItemView.extend({
         this.ui.plants.select2();
     },
     onPlantingSelect: function(planting){
-        this.ui.plants.val(planting.get('plant').id).change();
+        var plantId = (planting.get('plant') || {}).id;
+
+        var currentVal = this.ui.plants.val();
+        if (plantId != currentVal) {
+            this.ui.plants.val(plantId).change();
+        }
     },
     onPlantingDeselect: function(planting){
         this.ui.plants.val(null);

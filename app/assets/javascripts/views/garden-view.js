@@ -217,10 +217,10 @@ var SVGView = CP.Utils.D3View.extend({
 
         if (!node) return;
 
-        var selectedPlant = this.model.getPlantings().selected;
+        var selectedPlant = CP.Collections.plants.selected;
 
         if (selectedPlant) {
-            var promise = node.save({'plant': selected});
+            var promise = node.save({'plant': selectedPlant});
             promise.done(this.createPlantings.bind(this));
         } else {
             this.model.getPlantings().select(node);
