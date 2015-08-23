@@ -84,10 +84,8 @@ var SVGView = CP.Utils.D3View.extend({
     },
     bindShadow: function(d, i){
         var view = this;
-        var selected = this.model.get('selected');
-        if (!selected instanceof CP.Models.Plant) {
-            return;
-        }
+        var selected = this.model.getPlantings().selected;
+        if (!selected) return;
 
         this.d3
         .append('circle')
@@ -210,7 +208,15 @@ var SVGView = CP.Utils.D3View.extend({
         var node = this._closestNode;
         if (!node) return;
 
-        var selected = this.model.get('selected');
+        var currentPlant = node.get('plant');
+
+        if (currentPlant) {
+            this.model.getPlantings().select();
+            return;
+        }
+
+        var selectedPlant = this.model.getPlantings().selected;
+
         if (selected) {
             var promise = node.save({'plant': selected});
             promise.done(this.createPlantings.bind(this));
@@ -222,9 +228,6 @@ var SVGView = CP.Utils.D3View.extend({
 CP.Views.GardenView = Mn.ItemView.extend({
     childViewContainer: '.plantings-container',
     template: JST['garden/garden'],
-    initialize: function(){
-        this.collection = this.model.getPlantings();
-    },
     createScale: function(){
         this.width = this.$el.width();
 

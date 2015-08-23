@@ -4,7 +4,8 @@ var Planting = Backbone.Model.extend({
             garden_id: this.collection.garden_id
         };
     },
-    initialize: function () {
+    initialize: function (options) {
+        Backbone.Select.Me.applyTo( this );
         var plant = this.get('plant');
 
         if (plant) {
@@ -13,7 +14,7 @@ var Planting = Backbone.Model.extend({
     },
     parse: function(response){
         if (response.plant) {
-            response.plant = new Suggestion(response.plant);
+            response.plant = new CP.Models.Plant(response.plant);
         }
 
         return response;
@@ -35,6 +36,7 @@ var Planting = Backbone.Model.extend({
 
 var Plantings = Backbone.Collection.extend({
     initialize: function (models, options){
+        Backbone.Select.One.applyTo( this, models );
         this.garden_id = options.garden_id;
         this._matrix = [];
         this.on('add', this.onAdd);

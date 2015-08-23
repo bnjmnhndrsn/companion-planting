@@ -8,7 +8,8 @@ CP.Views.MenuView = Mn.ItemView.extend({
     template: JST['garden/menu'],
     initialize: function(){
         this.plantings = this.model.getPlantings();
-        this.listenTo('plantings', 'select')
+        this.listenTo(this.plantings, 'select', this.onPlantingSelect);
+        this.listenTo(this.plantings, 'deselect', this.onPlantingDeselect);
     },
     templateHelpers: function(){
         return {
@@ -18,14 +19,19 @@ CP.Views.MenuView = Mn.ItemView.extend({
     onShow: function(){
         this.ui.plants.select2();
     },
+    onPlantingSelect: function(planting){
+        this.ui.plants.val(planting.get('plant').id);
+    },
+    onPlantingDeselect: function(planting){
+        this.ui.plants.val(null);
+    },
     changePlant: function(){
         var val = this.ui.plants.val();
         var plant = CP.Collections.plants.get(val);
-        var selected = this.model.get('selected');
-        if (selected && !(selected instanceof CP.Models.Plant)) {
-            //its a node
+        if (this.plantings.selected) {
+            this.plantings.selected.save({'plant': plant});
+        } else {
+            this.plants.select(plant);
         }
-
-        this.model.set('selected', plant);
     }
 });

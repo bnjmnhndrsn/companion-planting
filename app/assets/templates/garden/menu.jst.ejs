@@ -1,5 +1,6 @@
 <h1>A garden!</h1>
 <select data-ui='plants'>
+    <option></option>
     <% _.each(plants, function(plant){ %>
         <option val="<%= plant.id %>"><%= plant.name %></option>
     <% }) %>

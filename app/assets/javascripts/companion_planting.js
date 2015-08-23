@@ -15,7 +15,7 @@ window.CP.App = Marionette.Application.extend({
     },
     setUpEntities: function(){
         var plants = CP.Collections.plants = new CP.Collections.Plants();
-        return [plants];
+        return [plants.fetch()];
     },
     setUpAppView: function(){
         var appView = new CP.Views.AppView({el: this.getOption('$el')})

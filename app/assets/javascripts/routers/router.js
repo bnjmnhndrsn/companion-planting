@@ -26,7 +26,7 @@ window.CP.Router = Backbone.Router.extend({
         var mainRegion = channel.request('get:region', 'main');
         var model = new CP.Models.Garden({id: id});
         var modelPromise = model.fetch();
-        $.when(model.fetch(), plants.fetch()).done(function(){
+        model.fetch().done(function(){
             var view = new CP.Views.GardenLayoutView({model: model});
             mainRegion.show(view);
         });
