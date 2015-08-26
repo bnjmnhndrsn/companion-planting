@@ -68,6 +68,7 @@ var PlantingView = CP.Utils.D3View.extend({
     onClick: function(){
         d3.event.stopPropagation();
         this.model.select();
+        return false;
     }
 });
 
